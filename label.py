@@ -23,8 +23,12 @@ print('saving')
 print(imgs.shape)
 np.save('data/data.npy', imgs, True)
 
-#for i in range(len(imgs)):
-#    cv2.imshow('a',imgs[i])
-#    cv2.waitKey(0)
-#    if i == 100:
-#        exit()   
+label = []
+
+for i in range(len(imgs)):
+    cv2.imshow('a',imgs[i])
+    key  = cv2.waitKey(0)
+    if key == 43:
+        label.append(0)
+    if key == 13:
+        label.append(1)
