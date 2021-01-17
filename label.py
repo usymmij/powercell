@@ -28,6 +28,7 @@ succ, im = cap.read()
 #80
 
 imgs = []
+imgc = []
 
 while succ:
     for i in range(8): # 720/80 = 9
@@ -35,33 +36,42 @@ while succ:
             for j in range(15): # 1280/80 = 16
                 for d in range(4):
                     crp = im[ 80*i + b*20 : 80*(i+1) + b*20, 80*j + d*20:80*(j+1) + d*20]
-                    imgs.append(crp)
+                    imgc.append(crp)
     succ, im = cap.read()
-imgs = np.asarray(imgs)
+cap.release()
+imgc = np.asarray(imgc)
+
 print('saving')
+
+for img in imgc:
+    imgs.append(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
+imgs = np.asarray(imgs)
 print(imgs.shape)
 np.save('data/data.npy', imgs, True)
-
+imgs = []
 label = []
 
 q = 0
-for i in range(len(imgs)):
-    if checkIfYellow(imgs[i]) == False:
-        label.append(0)
+for i in range(len(imgc)):
+    if checkIfYellow(imgc[i]) == False:
+        label.append([1,0,0])
         continue
     print('labeled: ' + str(i))
     print('labeled with ball: ' + str(q))
-    cv2.imshow('a',imgs[i])
+    cv2.imshow('a',imgc[i])
     key  = cv2.waitKey(0)
     if key == 45:
-        label.append(0)
+        label.append([1,0,0])
     if key == 43:
         q += 1
-        label.append(1)
+        label.append([0,1,0])
     if key == 13:
         q += 1
-        label.append(2)
+        label.append([0,0,1])
     if key == ord('~'):
+        label = np.asarray(label)
         np.save('data/label.npy',label, True)
         exit()
+label = np.asarray(label)
+np.save('data/label.npy',label, True)
 exit()
