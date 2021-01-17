@@ -11,16 +11,20 @@ succ, im = cap.read()
 imgs = []
 
 while succ:
-    for i in range(9): # 720/80 = 9
-        for j in range(16): # 1280/80 = 16
-            crp = im[80*i:80*(i+1), 80*j:80*(j+1)]
-            imgs.append(crp)
+    for i in range(8): # 720/80 = 9
+        for j in range(15): # 1280/80 = 16
+            for b in range(2):
+                for d in range(4):
+                    crp = im[ 80*i + b*20 : 80*(i+1) + b*20, 80*j + d*20:80*(j+1) + d*20]
+                    imgs.append(crp)
     succ, im = cap.read()
 imgs = np.asarray(imgs)
+print('saving')
+print(imgs.shape)
+np.save('data/data.npy', imgs, True)
 
-for i in range(len(imgs)):
-    cv2.imshow('a',imgs[i])
-    cv2.waitKey(0)
-    if i == 100:
-        exit()
-    
+#for i in range(len(imgs)):
+#    cv2.imshow('a',imgs[i])
+#    cv2.waitKey(0)
+#    if i == 100:
+#        exit()   
